@@ -235,3 +235,4 @@ exit 0
 # Error: writing blob: adding layer with blob (potentially insufficient UIDs or GIDs available in user namespace (requested 1000760003:54321 for /opt/oracle): Check /etc/subuid and /etc/subgid if configured locally and run "podman system migrate": lchown /opt/oracle: invalid argument): exit status 1
 # error on / not shared when docker images 
 # sudo mount --make-shared /
+export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
