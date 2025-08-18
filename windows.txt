@@ -1,0 +1,10 @@
+To create new windows,
+C-a
+
+to rename windows,
+C-,
+
+To switch to previous windows
+C-l
+C-p
+C-n
