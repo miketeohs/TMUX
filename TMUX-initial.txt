@@ -1,0 +1,107 @@
+StartHtmux() {
+     tmux new -d -s M-S1
+     tmux select-pane -t 1 -T Main
+     tmux split-window -h
+     tmux select-pane -t 2 -T W2
+     tmux splitw
+     tmux select-pane -t 3 -T W3
+     tmux splitw
+     tmux select-pane -t 4 -T W4
+     tmux select-pane -t 1
+     tmux set -g pane-border-status bottom
+}
+
+Starttmux() {
+#for S in S1 S2
+for S in S2
+do
+    tmux new -d -s $S
+    tmux select-pane -t 1 -T Main
+    tmux splitw
+    tmux select-pane -t 2
+    tmux split-window -h
+    tmux select-pane -t 3
+    tmux split-window -h
+    tmux select-pane -t 1 -T Main
+    tmux select-pane -t 2 -T podman-ps
+    tmux select-pane -t 3 -T podman-ps-a
+    tmux select-pane -t 4 -T podman-images
+    tmux select-pane -t 1
+    tmux send-keys -t 1 'echo "Hello"' C-m
+    tmux set -g pane-border-status bottom
+    tmux set -g status-right '#{forecast} | #H'
+    tmux set -g @forecast-locatin Singapore
+# tmux send-keys -t 2 'podman ps -w 2' C-m
+# podman ps -w 2 --format "table {{.ID}}\t{{.Image}}\t{{.Status}}"
+# tmux send-keys -t 3 'podman ps -a -w 2' C-m
+# podman ps -a -w 2 --format "table {{.ID}}\t{{.Image}}\t{{.Status}}"
+# tmux send-keys -t 4 'watch -n 2 podman images' C-m
+# watch -n 2 'podman image list --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.Size}}"'
+done
+tmux kill-sesson -t S2
+tmux ls
+}
+
+Starttmux2() {
+echo 2 TMUX windows
+# echo Number of Window # read # Windows
+read -p "How many Window? " my_var
+tmuxstart() {
+tmux new-session -d -s $1 >/dev/null
+tmux rename-window -t $1:0 'main'
+tmux splitw -v -p 10 -t $1:0.0
+tmux splitw -h -p 80 -t $1:0.1
+#required; otherwise pane numbering is bs
+# Michael
+tmux set -g pane-border-status bottom
+# Michael
+tmux select-pane -t $1:0.0
+tmux splitw -h -p 5 -t $1:0.0
+tmux send-keys -t $1:0.2 'sudo htop' Enter
+tmux send-keys -t $1:0.1 'tmux clock -t $1:0.1' Enter
+tmux select-pane -t $1:0.0
+tmux new-window -t $1
+tmux rename-window -t $1:1 'second'
+tmux splitw -v -p 10 -t $1:1.0
+tmux splitw -h -p 80 -t $1:1.1
+tmux select-pane -t $1:1.0
+tmux splitw -h -p 5 -t $1:1.0
+tmux clock -t $1:1.1
+tmux new-window -t $1
+tmux rename-window -t $1:2 'scratch'
+tmux splitw -v -p 10 -t $1:2.0
+tmux select-pane -t $1:2.0
+tmux splitw -h -p 5 -t $1:2.0
+tmux clock -t $1:2.1
+tmux select-window -t $1:0.0
+#tmux a -t $1
+}
+tmuxstart S1
+echo Exitting Session
+exit 0
+
+# Other useful
+# 1. creating a detached session tmux new-session -d -s rtb123
+# tmux new-session -d -s rtb123
+# tmux send-keys 'vagrant up' C-m
+# tmux detach -s rtb123
+}
+
+# sudo usermod --add-subuids 200000-201000 --add-subgids 200000-201000 michael
+# Error: writing blob: adding layer with blob (potentially insufficient UIDs or GIDs available in user namespace (requested 1000760003:54321 for /opt/oracle): Check /etc/subuid and /etc/subgid if configured locally and run "podman system migrate": lchown /opt/oracle: invalid argument): exit status 1
+# error on / not shared when docker images
+# sudo mount --make-shared /
+#
+# to pulll non ASCII characters, ls | grep -Px '[^[:ascii:]]*.html'
+# https://askubuntu.com/questions/1028440/how-do-i-search-for-lines-in-a-file-that-only-contain-ascii-characters-and-then
+# LC_ALL=C sed -r ':a;N;s|^([\d0-\d127]+)\n([\d0-\d127]+)$|\1 / \2|;ta'
+# LANG=en_US.UTF-8 find . -maxdepth 1 -name *[![:print:]]*.html
+# LC_ALL=zh_CN.UTF-8 find . -name '*[![:print:]]*'
+
+.tmux.conf
+
+Everything you need to know about Tmux copy paste - Ubuntu
+Enter ‘copy mode’ by pressing CTRL+b, [.
+Use the arrow keys to go to the position from where you want to start copying. Press CTRL+SPACE to start copying.
+Use arrow keys to go to the end of text you want to copy. Press ALT+w or CTRL+w to copy into Tmux buffer.
+Press CTRL+b, ] to paste in a possibly different Tmux pane/window.
